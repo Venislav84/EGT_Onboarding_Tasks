@@ -5,6 +5,7 @@
 #include <vector>
 #include <iomanip>
 #include <stack>
+#include <algorithm>
 using namespace std;
 
 //  Task.1 Write a program that takes two vectors of integers and compares them element by element.
@@ -245,14 +246,13 @@ using namespace std;
 //        The input will be such that the result will never have any railcars with the same numbers.
 
 
-
 int main() {
-    std::stack<int> trackA, trackB, singleTrack;
+    std::vector<std::pair<int, char>> trackA, trackB, singleTrack;
 
     // Read input for Track A
     int num;
     while (std::cin >> num) {
-        trackA.push(num);
+        trackA.push_back(std::make_pair(num, 'A'));
         if (std::cin.get() == '\n') {
             break;
         }
@@ -260,52 +260,37 @@ int main() {
 
     // Read input for Track B
     while (std::cin >> num) {
-        trackB.push(num);
+        trackB.push_back(std::make_pair(num, 'B'));
         if (std::cin.get() == '\n') {
             break;
         }
     }
 
-    // Merge the railcars onto the single track
-    while (!trackA.empty() && !trackB.empty()) {
-        if (trackA.top() > trackB.top()) {
-            singleTrack.push(trackA.top());
-            trackA.pop();
-            std::cout << "A ";
-        } else {
-            singleTrack.push(trackB.top());
-            trackB.pop();
-            std::cout << "B ";
-        }
-    }
+    // merge vectors trackA and trackB in singleTrack
+    singleTrack.reserve(trackA.size() + trackB.size());
+    singleTrack.insert(singleTrack.end(), trackA.begin(), trackA.end());
+    singleTrack.insert(singleTrack.end(), trackB.begin(), trackB.end());
 
-    // Move any remaining railcars from Track A
-    while (!trackA.empty()) {
-        singleTrack.push(trackA.top());
-        trackA.pop();
-        std::cout << "A ";
-    }
+    // cout << "Vector: ";
+    // for (int i = 0; i < singleTrack.size(); i++)
+    //     cout << singleTrack[i].first << " ";
+    // cout << endl;
 
-    // Move any remaining railcars from Track B
-    while (!trackB.empty()) {
-        singleTrack.push(trackB.top());
-        trackB.pop();
-        std::cout << "B ";
-    }
+    // Sort the vector in descending order
+    sort(singleTrack.rbegin(), singleTrack.rend());   //rbeging()  reverse begin
 
-    std::cout << std::endl;
+    // Print the reversed vector by first element - int
+    cout << "Sorted Vector in descending order:\n" << endl;
+    for (int i = 0; i < singleTrack.size(); i++)
+        cout << singleTrack[i].first << " ";
+    cout << endl;
 
-    // Print the final configuration of the train
-    while (!singleTrack.empty()) {
-        std::cout << singleTrack.top() << " ";
-        singleTrack.pop();
-    }
+    //Print the reversed vector by second element - (char A or B)
+    for (int i = 0; i < singleTrack.size(); i++)
+        cout << singleTrack[i].second << " ";
+    cout << endl;
+
+
 
     return 0;
 }
-
-
-
-
-
-
